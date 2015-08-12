@@ -190,7 +190,7 @@ public class OfflineMapDownloader implements MapboxConstants {
         // Load OfflineMapDatabases from File System
         ContextWrapper cw = new ContextWrapper(context);
         for (String s : cw.databaseList()) {
-            if (!s.toLowerCase().contains("partial") && !s.toLowerCase().contains("journal")) {
+            if (!s.contains("com.google.android.gms.ads") && !s.contains("scoutlook") && !s.contains("webview") && !s.toLowerCase().contains("partial") && !s.toLowerCase().contains("journal")) {
                 // Setup Database Handler
                 OfflineDatabaseManager.getOfflineDatabaseManager(context).getOfflineDatabaseHandlerForMapId(s, true);
 
@@ -551,13 +551,13 @@ public class OfflineMapDownloader implements MapboxConstants {
         for (String url : urlStrings) {
             ContentValues cv = new ContentValues();
             cv.put(OfflineDatabaseHandler.FIELD_RESOURCES_URL, url);
-            db.insert(OfflineDatabaseHandler.TABLE_RESOURCES, null, cv);
+            db.insertWithOnConflict(OfflineDatabaseHandler.TABLE_RESOURCES, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
         }
         for (int generatedIndex = 0; generatedIndex < generator.getURLCount(); generatedIndex++) {
             ContentValues cv = new ContentValues();
             String url = generator.getURLForIndex(context, mapID, imageQuality, generatedIndex);
             cv.put(OfflineDatabaseHandler.FIELD_RESOURCES_URL, url);
-            db.insert(OfflineDatabaseHandler.TABLE_RESOURCES, null, cv);
+            db.insertWithOnConflict(OfflineDatabaseHandler.TABLE_RESOURCES, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -620,10 +620,10 @@ public class OfflineMapDownloader implements MapboxConstants {
         }
 
         // Make sure this completed map doesn't exist already
-        if (isMapIdAlreadyAnOfflineMapDatabase(mapID)) {
-            Log.w(TAG, String.format(MAPBOX_LOCALE, "MapId '%s' has already been downloaded.  Please delete it before trying to download again.", mapID));
-            return;
-        }
+//        if (isMapIdAlreadyAnOfflineMapDatabase(mapID)) {
+//            Log.w(TAG, String.format(MAPBOX_LOCALE, "MapId '%s' has already been downloaded.  Please delete it before trying to download again.", mapID));
+//            return;
+//        }
 
 //        [self setUpNewDataSession];
 

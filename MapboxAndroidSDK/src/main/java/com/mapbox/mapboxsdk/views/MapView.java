@@ -178,6 +178,8 @@ public class MapView extends ViewGroup implements MapViewConstants, MapEventsRec
     private float mMinZoomForClustering = 22;
     private boolean mShouldDisplayBubble = true;
 
+    private boolean enabled;
+
     /**
      * Constructor for XML layout calls. Should not be used programmatically.
      *
@@ -1639,6 +1641,10 @@ public class MapView extends ViewGroup implements MapViewConstants, MapEventsRec
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        if (!enabled)
+            return true;
+
 //        Log.i(TAG, "onTouchEvent with event = " + event);
         // If map rotation is enabled, propagate onTouchEvent to the rotate gesture detector
         if (mMapRotationEnabled) {
@@ -1809,6 +1815,16 @@ public class MapView extends ViewGroup implements MapViewConstants, MapEventsRec
                 listener.onScroll(event);
             }
         }
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override
